@@ -3,13 +3,16 @@ import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/ThemedText";
 import useThemeColors from "@/hooks/UseThemeColors";
+import Card from "@/components/Card";
 
 export default function Index() {
   const colors = useThemeColors();
 
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: colors.tint}]}>
-      <ThemedText variant="headline" color="grayWhite">Pokedex</ThemedText>
+      <Card>
+        <ThemedText variant="headline" color="grayDark">Pokedex</ThemedText>
+      </Card>
     </SafeAreaView>
   );
 }
