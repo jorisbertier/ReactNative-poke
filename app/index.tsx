@@ -5,15 +5,15 @@ import { ThemedText } from "@/components/ThemedText";
 import useThemeColors from "@/hooks/UseThemeColors";
 import Card from "@/components/Card";
 import { PokemonCard } from "@/components/PokemonCard";
-import { useFetchQuery } from "@/hooks/useFetchQuery";
+import { useFetchQuery, useInfiniteFetchQuery } from "@/hooks/useFetchQuery";
 import { getPokemonId } from '../functions/pokemon';
 
 export default function Index() {
   const colors = useThemeColors();
 
-  const { data, isFetching } = useFetchQuery('/pokemon?limit=21')
+  const { data, isFetching, fetchNextPage } = useInfiniteFetchQuery('/pokemon?limit=21')
 
-  const pokemons = data?.results ?? []
+  const pokemons = data?.pages.flatMap(page => page.results) ?? []
   // const pokemons = Array.from({length: 15}, (_, k) => ({
   //   name: 'Pokemon name',
   //   id: k + 1
@@ -34,6 +34,7 @@ export default function Index() {
         }
         contentContainerStyle={[styles.gridGap, styles.list]}
         columnWrapperStyle={styles.gridGap}
+        onEndReached={() => fetchNextPage()}
         renderItem={({item}) => <PokemonCard id={getPokemonId(item.url)} name={item.name} style={{flex: 1/3,height: 200, alignItems: 'center'}}/>}
         keyExtractor={(item) => item.url}>
 
