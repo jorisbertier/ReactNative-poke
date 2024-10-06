@@ -4,10 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/ThemedText";
 import useThemeColors from "@/hooks/UseThemeColors";
 import Card from "@/components/Card";
+import { PokemonCard } from "@/components/PokemonCard";
 
 export default function Index() {
   const colors = useThemeColors();
-  const pokemons = Array.from({length: 35}, (_, k) => ({
+  const pokemons = Array.from({length: 15}, (_, k) => ({
     name: 'Pokemon name',
     id: k + 1
   }))
@@ -24,9 +25,8 @@ export default function Index() {
         numColumns={3}
         contentContainerStyle={[styles.gridGap, styles.list]}
         columnWrapperStyle={styles.gridGap}
-        renderItem={({item}) => <Card style={{flex: 1/3,height: 200, alignItems: 'center'}}>
-          <Text>{item.name}</Text>
-        </Card>} keyExtractor={(item) => item.id.toString()}>
+        renderItem={({item}) => <PokemonCard id={item.id} name={item.name} style={{flex: 1/3,height: 200, alignItems: 'center'}}/>}
+        keyExtractor={(item) => item.id.toString()}>
 
         </FlatList>
       </Card>
