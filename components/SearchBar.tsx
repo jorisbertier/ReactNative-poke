@@ -2,12 +2,13 @@ import { TextInput, View } from "react-native"
 
 type Props = {
     value: string,
-    onChange: (s: string) => void
+    onChange: (s: string) => void,
 }
 
 export default function SearchBar({value, onChange}: Props) {
-    return
+    return (
     <View>
         <TextInput onChangeText={onChange} value={value}></TextInput>
     </View>
+    )
 }
