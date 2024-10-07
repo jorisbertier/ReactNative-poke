@@ -17,11 +17,13 @@ export default function Pokemon() {
     const colors = useThemeColors()
     const params = useLocalSearchParams() as {id: string}
     const { data:pokemon } = useFetchQuery("/pokemon/[id]", {id: params.id})
+    const { data:species } = useFetchQuery("/pokemon-species/[id]", {id: params.id})
     const mainType = pokemon?.types[0].type.name
     const colorType = mainType ? Colors.type[mainType] : colors.tint
     const types = pokemon?.types ?? []
-
-
+    const bio = species?.flavor_text_entries
+    ?.find(({ language }) => language.name === 'en')
+    ?.flavor_text.replaceAll('\n', '. ')
     return (
         <RootView style={{backgroundColor: colorType}}>
             <View>
@@ -33,6 +35,7 @@ export default function Pokemon() {
                         <ThemedText color="grayWhite" variant="headline" style={{textTransform: 'capitalize'}}>
                             {pokemon?.name}
                         </ThemedText>
+                        <ThemedText color="grayWhite" variant="subtitle2">#{params.id.padStart(3, '0')}</ThemedText>
                     </Row>
                     <View style={styles.body}>
                         <Image
@@ -53,9 +56,11 @@ export default function Pokemon() {
                                 <PokemonSpec style={{borderStyle: 'solid', borderRightWidth: 1, borderColor: colors.grayLight}} title={formatedWeight(pokemon?.height)} description="Size" image={require('@/assets/images/straighten.png')}></PokemonSpec>
                                 <PokemonSpec title={pokemon?.moves.slice(0, 2).map(m => m.move.name).join('\n')} description={'Moves'}></PokemonSpec>
                             </Row>
+                            <ThemedText>{bio}</ThemedText>
+                            {/* Stats */}
                             <ThemedText variant="subtitle1" style={{color: colorType}}>Base stat</ThemedText>
                     </Card>
-                <ThemedText color="grayWhite" variant="subtitle2">{params.id.padStart(3, '0')}</ThemedText>
+                
                 <Text>Pokemon {params.id}</Text>
             </View>
         </RootView>
