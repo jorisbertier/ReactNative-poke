@@ -1,10 +1,11 @@
 import Card from '@/components/Card';
+import PokemonSpec from '@/components/Pokemon/PokemonSpec';
 import PokemonType from '@/components/PokemonType';
 import { RootView } from '@/components/RootView';
 import Row from '@/components/Row';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors } from '@/constants/Color';
-import { getPokemonArtwork } from '@/functions/pokemon';
+import { formatedWeight, getPokemonArtwork } from '@/functions/pokemon';
 import { useFetchQuery } from '@/hooks/useFetchQuery';
 import useThemeColors from '@/hooks/UseThemeColors';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -45,7 +46,13 @@ export default function Pokemon() {
                             <Row gap={16}>
                                 {types.map(type => <PokemonType name={type.type.name} key={type.type.name}/>)}
                             </Row>
+                            
                             <ThemedText variant="subtitle1" style={{color: colorType}}>About</ThemedText>
+                            <Row>
+                                <PokemonSpec style={{borderStyle: 'solid', borderRightWidth: 1, borderColor: colors.grayLight}} title={formatedWeight(pokemon?.weight)} description="Weight" image={require('@/assets/images/weight.png')}></PokemonSpec>
+                                <PokemonSpec style={{borderStyle: 'solid', borderRightWidth: 1, borderColor: colors.grayLight}} title={formatedWeight(pokemon?.height)} description="Size" image={require('@/assets/images/straighten.png')}></PokemonSpec>
+                                <PokemonSpec title={pokemon?.moves.slice(0, 2).map(m => m.move.name).join('\n')} description={'Moves'}></PokemonSpec>
+                            </Row>
                             <ThemedText variant="subtitle1" style={{color: colorType}}>Base stat</ThemedText>
                     </Card>
                 <ThemedText color="grayWhite" variant="subtitle2">{params.id.padStart(3, '0')}</ThemedText>
