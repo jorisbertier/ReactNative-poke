@@ -9,6 +9,7 @@ import { useFetchQuery, useInfiniteFetchQuery } from "@/hooks/useFetchQuery";
 import { getPokemonId } from '../functions/pokemon';
 import SearchBar from "@/components/SearchBar";
 import { useState } from "react";
+import Row from "@/components/Row";
 
 export default function Index() {
   const colors = useThemeColors();
@@ -16,27 +17,29 @@ export default function Index() {
   const { data, isFetching, fetchNextPage } = useInfiniteFetchQuery('/pokemon?limit=21')
 
   const pokemons = data?.pages.flatMap(page => page.results) ?? []
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('');
+  const filteredPokemons = search ? pokemons.filter(p => p.name.includes(search.toLocaleLowerCase())
+  || getPokemonId(p.url).toString() === search) : pokemons;
 
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: colors.tint}]}>
-      <View style={styles.header}>
+      <Row style={styles.header} gap={16}>
         <Image source={require('@/assets/images/pokeball.png')} width={50} height={50}/>
         <ThemedText variant="headline" color="grayLight">Pokedex</ThemedText>
-      </View>
-      <View>
+      </Row>
+      <Row>
         <SearchBar value={search} onChange={setSearch}/>
-      </View>
+      </Row>
       <Card style={styles.body}>
         <FlatList
-        data={pokemons}
+        data={filteredPokemons}
         numColumns={3}
         ListFooterComponent={
           isFetching ? <ActivityIndicator color={colors.tint}/> : null
         }
         contentContainerStyle={[styles.gridGap, styles.list]}
         columnWrapperStyle={styles.gridGap}
-        onEndReached={() => fetchNextPage()}
+        onEndReached={search ? undefined : () => fetchNextPage()}
         renderItem={({item}) => <PokemonCard id={getPokemonId(item.url)} name={item.name} style={{flex: 1/3,height: 200, alignItems: 'center'}}/>}
         keyExtractor={(item) => item.url}>
 
@@ -50,20 +53,18 @@ export default function Index() {
 const styles = StyleSheet.create({
 
   container: {
-    backgroundColor: 'red',
     flex: 1,
-    padding: 4
+    padding: 4,
   },
 
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8
   },
 
   body: {
-    flex: 1
+    flex: 1,
+    marginTop: 16,
   },
 
   gridGap : {
@@ -72,5 +73,5 @@ const styles = StyleSheet.create({
   list: {
     padding: 12,
     
-  }
+  },
 })
