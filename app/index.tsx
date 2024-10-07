@@ -25,6 +25,9 @@ export default function Index() {
         <Image source={require('@/assets/images/pokeball.png')} width={50} height={50}/>
         <ThemedText variant="headline" color="grayLight">Pokedex</ThemedText>
       </View>
+      <View>
+        
+      </View>
       <Card style={styles.body}>
         <FlatList
         data={pokemons}
