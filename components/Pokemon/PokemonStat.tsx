@@ -23,8 +23,9 @@ export function PokemonStat({ style,color, name, value, ...rest}: Props) {
     
     return (
         <Row gap={8} style={[style, styles.root]} {...rest}>
-            <View style={[styles.name, {borderColor: colors.grayLight}]}></View>
-            <ThemedText variant="subtitle3" style={{color: color}}>{statShortName(name)}</ThemedText>
+            <View style={[styles.name, {borderColor: colors.grayLight}]}>
+                <ThemedText variant="subtitle3" style={{color: color}}>{statShortName(name)}</ThemedText>
+            </View>
             <View style={styles.number}>
                 <ThemedText>{value.toString().padStart(3, "0")}</ThemedText>
             </View>
@@ -38,7 +39,8 @@ export function PokemonStat({ style,color, name, value, ...rest}: Props) {
 }
 
 const styles = StyleSheet.create({
-    root: {},
+    root: {
+    },
     name: {
         width: 40,
         paddingRight: 8,
@@ -60,6 +62,6 @@ const styles = StyleSheet.create({
     },
     barBackground : {
         height: 4,
-        opacity: 0.24
+        opacity: .24
     }
 })
