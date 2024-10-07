@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Color";
 import { useQuery, useInfiniteQuery, InitialPageParam } from "@tanstack/react-query";
 
 
@@ -27,7 +28,7 @@ type API = {
         };
         types: {
             type: {
-                name: string;
+                name: keyof(typeof Colors)['type'];
             };
         } [];
     };
