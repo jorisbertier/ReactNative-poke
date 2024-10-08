@@ -16,13 +16,15 @@ import { Audio } from 'expo-av';
 
 export default function Pokemon() {
 
-    const colors = useThemeColors()
-    const params = useLocalSearchParams() as {id: string}
-    const { data:pokemon } = useFetchQuery("/pokemon/[id]", {id: params.id})
+    const colors = useThemeColors();
+    const params = useLocalSearchParams() as {id: string};
+    const { data:pokemon } = useFetchQuery("/pokemon/[id]", {id: params.id});
+    const id = parseInt(params.id)
     const { data:species } = useFetchQuery("/pokemon-species/[id]", {id: params.id})
-    const mainType = pokemon?.types[0].type.name
-    const colorType = mainType ? Colors.type[mainType] : colors.tint
-    const types = pokemon?.types ?? []
+    const mainType = pokemon?.types[0].type.name;
+    const colorType = mainType ? Colors.type[mainType] : colors.tint;
+    const types = pokemon?.types ?? [];
+
     const bio = species?.flavor_text_entries
     ?.find(({ language }) => language.name === 'en')
     ?.flavor_text.replaceAll('\n', '. ');
@@ -39,6 +41,14 @@ export default function Pokemon() {
         }, {shouldPlay: true})
 
         sound.playAsync()
+    }
+
+    const onPrevious = () => {
+        router.replace({pathname: '/pokemon/[id]', params: {id: Math.max(id - 1, 1)}})
+    }
+
+    const onNext = () => {
+        router.replace({pathname: '/pokemon/[id]', params: {id: Math.min(id + 1, 151)}})
     }
 
     return (
@@ -58,6 +68,13 @@ export default function Pokemon() {
                 </Row>
                 <View style={styles.body}>
                     <Row style={styles.imageRow}>
+                        {id === 1 ? (
+                            <View style={{width: 24}}></View>
+                        ) : (
+                        <Pressable onPress={onPrevious}>
+                            <Image source={require('@/assets/images/chevron_left.png')} height={24} width={24}/>
+                        </Pressable>
+                        )}
                         <Pressable onPress={onImagePress}>
                             <Image
                             style={{
@@ -68,6 +85,13 @@ export default function Pokemon() {
                             height={200}
                             />
                         </Pressable>
+                        {id === 151 ? (
+                        <View style={{width: 24}}></View>
+                        ) : (
+                        <Pressable onPress={onNext}>
+                            <Image source={require('@/assets/images/chevron_right.png')} height={24} width={24}/>
+                        </Pressable>
+                        )}
                     </Row>
                 </View>
                 <Card style={styles.card}>
@@ -107,7 +131,11 @@ const styles = StyleSheet.create({
     imageRow : {
         position: 'absolute',
         top: -140,
-        zIndex: 2
+        zIndex: 2,
+        justifyContent: 'space-between',
+        left: 0,
+        right: 0,
+        paddingHorizontal: 20
         
     },
     artwork: {
