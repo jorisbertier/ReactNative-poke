@@ -12,6 +12,7 @@ import useThemeColors from '@/hooks/UseThemeColors';
 import { useLocalSearchParams, router } from 'expo-router';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
+import { Audio } from 'expo-av';
 
 export default function Pokemon() {
 
@@ -27,6 +28,19 @@ export default function Pokemon() {
     ?.flavor_text.replaceAll('\n', '. ');
 
     const stats = pokemon?.stats ?? basePokemonStats;
+
+    const onImagePress = async () => {
+        const cry = pokemon?.cries.latest;
+        if(!cry) {
+            return
+        }
+        const {sound} = await Audio.Sound.createAsync({
+            uri: cry
+        }, {shouldPlay: true})
+
+        sound.playAsync()
+    }
+
     return (
         <RootView backgroundColor={colorType}>
             <View>
@@ -43,14 +57,18 @@ export default function Pokemon() {
                     
                 </Row>
                 <View style={styles.body}>
-                    <Image
-                    style={{
-                        ...styles.artwork
-                    }}
-                    source={{uri: getPokemonArtwork(params.id)}}
-                    width={200}
-                    height={200}
-                    />
+                    <Row style={styles.imageRow}>
+                        <Pressable onPress={onImagePress}>
+                            <Image
+                            style={{
+                                ...styles.artwork
+                            }}
+                            source={{uri: getPokemonArtwork(params.id)}}
+                            width={200}
+                            height={200}
+                            />
+                        </Pressable>
+                    </Row>
                 </View>
                 <Card style={styles.card}>
                     <Row gap={16} style={{height: 20}}>
@@ -86,11 +104,13 @@ const styles = StyleSheet.create({
         right: 8,
         top: 8
     },
-    artwork: {
+    imageRow : {
         position: 'absolute',
         top: -140,
-        alignSelf: 'center',
         zIndex: 2
+        
+    },
+    artwork: {
     },
     body : {
         marginTop: 144,

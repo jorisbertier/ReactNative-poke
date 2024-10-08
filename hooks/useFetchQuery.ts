@@ -24,7 +24,7 @@ type API = {
             };
         }[];
         cries: {
-            lastest: string;
+            latest: string;
         };
         types: {
             type: {
